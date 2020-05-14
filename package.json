@@ -1,0 +1,49 @@
+{
+  "name": "node-red-contrib-tensorflow",
+  "version": "0.0.1",
+  "description": "TensorFlow.js nodes using pre-trained models",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node getmodels.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red": {
+    "nodes": {
+      "posenet": "posenet.js"
+    }
+  },
+  "keywords": [
+    "node-red",
+    "tensorflow"
+  ],
+  "author": "kazuhitoyokoi",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.0.4",
+    "@tensorflow-models/posenet": "^2.2.1",
+    "@tensorflow-models/body-pix": "^2.0.5",
+    "@tensorflow-models/coco-ssd": "^2.0.2",
+    "@tensorflow-models/universal-sentence-encoder": "^1.2.2",
+    "@tensorflow-models/knn-classifier": "^1.2.2",
+    "@tensorflow-models/speech-commands": "^0.4.2",
+    "@tensorflow-models/blazeface": "^0.0.5",
+    "@tensorflow-models/toxicity": "^1.2.2",
+    "@tensorflow-models/facemesh": "^0.0.1",
+    "@tensorflow-models/handpose": "^0.0.3",
+    "@tensorflow-models/deeplab": "^0.1.1",
+    "@tensorflow-models/qna": "^1.0.0",
+    "@tensorflow/tfjs-converter": "^1.7.2",
+    "@tensorflow/tfjs-core": "^1.7.2",
+    "canvas": "^2.6.1",
+    "jimp": "^0.10.1",
+    "superagent": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow/issues"
+  },
+  "homepage": "https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow#readme"
+}

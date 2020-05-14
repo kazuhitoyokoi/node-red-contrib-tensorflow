@@ -1,3 +1,6 @@
+package-lock.json
+models/
+
 # Logs
 logs
 *.log
