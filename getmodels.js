@@ -6,9 +6,16 @@ var urls = [
     'https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/float/075/group1-shard2of2.bin'
 ];
 
-for (var i = 0; i < urls.length; i++) {
-    superagent.get(urls[i]).responseType('blob').end(function (err, res) {
-        var file = res.req.path.split('/').slice(-1)[0];
-        fs.writeFileSync(__dirname + '/models/' + file, res.body);
-    });
-}
+fs.mkdir(__dirname + '/models', function (err) {
+    if (err) {
+        console.log(err);
+    } else {
+        for (var i = 0; i < urls.length; i++) {
+            superagent.get(urls[i]).responseType('blob').end(function (err, res) {
+                var file = res.req.path.split('/').slice(-1)[0];
+                fs.writeFileSync(__dirname + '/models/' + file, res.body);
+            });
+        }
+    }
+});
+
