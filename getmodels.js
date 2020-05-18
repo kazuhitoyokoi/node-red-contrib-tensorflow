@@ -23,17 +23,19 @@ var models = [{
            'https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/float/075/group1-shard2of2.bin']
 }];
 
-try { fs.mkdirSync(__dirname + '/models'); } catch (e) {}
-models.forEach(function (model) {
-    try { fs.mkdirSync(__dirname + '/models/' + model.name); } catch (e) {}
-    for (var i = 0; i < model.urls.length; i++) {
-        superagent.get(model.urls[i]).responseType('blob').end(function (err, res) {
-            if (!err) {
+(async () => {
+    try { fs.mkdirSync(__dirname + '/models'); } catch (e) {}
+    for (var i = 0; i < models.length; i++) {
+        var model = models[i];
+        try { fs.mkdirSync(__dirname + '/models/' + model.name); } catch (e) {}
+        for (var j = 0; j < model.urls.length; j++) {
+            try {
+                var res = await superagent.get(model.urls[j]).responseType('blob');
                 var file = res.req.path.split('/').slice(-1)[0];
                 fs.writeFileSync(__dirname + '/models/' + model.name + '/' + file, res.body);
-            } else {
+            } catch (err) {
                 console.log(err);
             }
-        });
+        }
     }
-});
+})();
