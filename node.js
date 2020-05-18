@@ -93,7 +93,7 @@ module.exports = function (RED) {
                                 var ctx = cv2.getContext('2d');
                                 ctx.drawImage(image, 0, 0);
                                 ctx.strokeStyle = 'rgb(255, 111, 0)';
-                                ctx.lineWidth = 6;
+                                ctx.lineWidth = 10;
 
                                 try { ctx.drawLine({ start: pose.nose, end: pose.leftEye }); } catch (e) {}
                                 try { ctx.drawLine({ start: pose.leftEye, end: pose.leftEar }); } catch (e) {}
