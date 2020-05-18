@@ -9,7 +9,7 @@
   },
   "node-red": {
     "nodes": {
-      "posenet": "posenet.js"
+      "node": "node.js"
     }
   },
   "keywords": [

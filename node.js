@@ -88,7 +88,7 @@ module.exports = function (RED) {
                                                    y: (pose.leftShoulder.y + pose.rightShoulder.y)/2 };
                             }
                             if (true) {
-                                msg.payload = result.keypoints;
+                                msg.payload = pose;
                                 var cv2 = pureimage.make(image.width, image.height);
                                 var ctx = cv2.getContext('2d');
                                 ctx.drawImage(image, 0, 0);
