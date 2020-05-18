@@ -128,6 +128,9 @@ module.exports = function (RED) {
                                 node.status({});
                             }
                         });
+                    }, function (error) {
+                        node.error(error, msg);
+                        node.status({ fill: 'red', shape: 'ring', text: 'error' });
                     });
                 });
             });
