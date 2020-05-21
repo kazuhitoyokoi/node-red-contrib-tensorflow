@@ -14,6 +14,17 @@ module.exports = function (RED) {
     function PosenetNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
+        var modelPosenet
+
+        setTimeout(function () {
+            posenet.load({
+                modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/posenet/model-stride16.json'
+            }).then(function (model) {
+                modelPosenet = model;
+                node.status({ fill: "green", shape: "ring", text: "model loaded" });
+            });
+        }, 1000);
+
         node.on('input', function (msg) {
             node.status({ fill: "green", shape: "dot", text: "analyzing..." });
             jimp.read(msg.payload).then(function (data) {
@@ -72,62 +83,58 @@ module.exports = function (RED) {
                             node.status({});
                         });
                     });*/
-                    posenet.load({
-                        modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/posenet/model-stride16.json'
-                    }).then(function (model) {
-                        model.estimateSinglePose(cv).then(function (result) {
-                            msg.details = result;
-                            var pose = {};
-                            for (var i = 0; i < result.keypoints.length; i++) {
-                                if (result.keypoints[i].score > 0.6) {
-                                    pose[result.keypoints[i].part] = result.keypoints[i].position;
-                                }
+                    modelPosenet.estimateSinglePose(cv).then(function (result) {
+                        msg.details = result;
+                        var pose = {};
+                        for (var i = 0; i < result.keypoints.length; i++) {
+                            if (result.keypoints[i].score > 0.6) {
+                                pose[result.keypoints[i].part] = result.keypoints[i].position;
                             }
-                            if (pose.leftShoulder && pose.rightShoulder) {
-                                pose['center'] = { x: (pose.leftShoulder.x + pose.rightShoulder.x)/2,
-                                                   y: (pose.leftShoulder.y + pose.rightShoulder.y)/2 };
-                            }
-                            if (true) {
-                                msg.payload = pose;
-                                var cv2 = pureimage.make(image.width, image.height);
-                                var ctx = cv2.getContext('2d');
-                                ctx.drawImage(image, 0, 0);
-                                ctx.strokeStyle = 'rgb(255, 111, 0)';
-                                ctx.lineWidth = 10;
+                        }
+                        if (pose.leftShoulder && pose.rightShoulder) {
+                            pose['center'] = { x: (pose.leftShoulder.x + pose.rightShoulder.x)/2,
+                                               y: (pose.leftShoulder.y + pose.rightShoulder.y)/2 };
+                        }
+                        if (true) {
+                            msg.payload = pose;
+                            var cv2 = pureimage.make(image.width, image.height);
+                            var ctx = cv2.getContext('2d');
+                            ctx.drawImage(image, 0, 0);
+                            ctx.strokeStyle = 'rgb(255, 111, 0)';
+                            ctx.lineWidth = 10;
 
-                                try { ctx.drawLine({ start: pose.nose, end: pose.leftEye }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftEye, end: pose.leftEar }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.nose, end: pose.rightEye }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.rightEye, end: pose.rightEar }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.nose, end: pose.center }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftShoulder, end: pose.rightShoulder }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftShoulder, end: pose.leftElbow }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftElbow, end: pose.leftWrist }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.rightShoulder, end: pose.rightElbow }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.rightElbow, end: pose.rightWrist }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.center, end: pose.leftHip }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftHip, end: pose.leftKnee }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.leftKnee, end: pose.leftAnkle }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.center, end: pose.rightHip }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.rightHip, end: pose.rightKnee }); } catch (e) {}
-                                try { ctx.drawLine({ start: pose.rightKnee, end: pose.rightAnkle }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.nose, end: pose.leftEye }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftEye, end: pose.leftEar }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.nose, end: pose.rightEye }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.rightEye, end: pose.rightEar }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.nose, end: pose.center }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftShoulder, end: pose.rightShoulder }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftShoulder, end: pose.leftElbow }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftElbow, end: pose.leftWrist }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.rightShoulder, end: pose.rightElbow }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.rightElbow, end: pose.rightWrist }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.center, end: pose.leftHip }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftHip, end: pose.leftKnee }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.leftKnee, end: pose.leftAnkle }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.center, end: pose.rightHip }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.rightHip, end: pose.rightKnee }); } catch (e) {}
+                            try { ctx.drawLine({ start: pose.rightKnee, end: pose.rightAnkle }); } catch (e) {}
 
-                                var wsb = new streamBuffers.WritableStreamBuffer({ initialSize: 1, incrementAmount: 1 });
-                                pureimage.encodePNGToStream(cv2, wsb).then(function () {
-                                    msg.annotatedInput = wsb.getContents();
-                                    node.send(msg);
-                                    node.status({});
-                                }).catch(function (error) {
-                                    node.error(error, msg);
-                                    node.status({ fill: 'red', shape: 'ring', text: error });
-                                });
-                            } else {
-                                msg.annotatedInput = msg.payload;
-                                msg.payload = null;
+                            var wsb = new streamBuffers.WritableStreamBuffer({ initialSize: 1, incrementAmount: 1 });
+                            pureimage.encodePNGToStream(cv2, wsb).then(function () {
+                                msg.annotatedInput = wsb.getContents();
                                 node.send(msg);
                                 node.status({});
-                            }
-                        });
+                            }).catch(function (error) {
+                                node.error(error, msg);
+                                node.status({ fill: 'red', shape: 'ring', text: error });
+                            });
+                        } else {
+                            msg.annotatedInput = msg.payload;
+                            msg.payload = null;
+                            node.send(msg);
+                            node.status({});
+                        }
                     }, function (error) {
                         node.error(error, msg);
                         node.status({ fill: 'red', shape: 'ring', text: 'error' });
