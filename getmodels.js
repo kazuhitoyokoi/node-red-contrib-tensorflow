@@ -28,13 +28,19 @@ var models = [{
     for (var i = 0; i < models.length; i++) {
         var model = models[i];
         try { fs.mkdirSync(__dirname + '/models/' + model.name); } catch (e) {}
-        for (var j = 0; j < model.urls.length; j++) {
-            try {
-                var res = await superagent.get(model.urls[j]).responseType('blob');
-                var file = res.req.path.split('/').slice(-1)[0];
-                fs.writeFileSync(__dirname + '/models/' + model.name + '/' + file, res.body);
-            } catch (err) {
-                console.log(err);
+            for (var j = 0; j < model.urls.length; j++) {
+                var flag = true;
+                for (var k = 0; flag && k < 1024; k++) {
+                try {
+                    console.log('Downloading: ' + model.name + ', ' + model.urls[j]);
+                    var res = await superagent.get(model.urls[j]).responseType('blob');
+                    var file = res.req.path.split('/').slice(-1)[0];
+                    fs.writeFileSync(__dirname + '/models/' + model.name + '/' + file, res.body);
+                    console.log('Downloaded: ' + model.name + ', ' + model.urls[j]);
+                    flag = false;
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
     }
