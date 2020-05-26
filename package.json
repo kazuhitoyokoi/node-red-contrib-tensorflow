@@ -9,7 +9,7 @@
   },
   "node-red": {
     "nodes": {
-      "node": "node.js"
+      "node": "tensorflow.js"
     }
   },
   "keywords": [

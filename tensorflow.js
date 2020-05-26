@@ -2,6 +2,7 @@ var jimp = require('jimp');
 var streamBuffers = require('stream-buffers');
 var pureimage = require('pureimage');
 var cocoSsd = require('@tensorflow-models/coco-ssd');
+var handpose = require('@tensorflow-models/handpose');
 var mobilenet = require('@tensorflow-models/mobilenet');
 var posenet = require('@tensorflow-models/posenet');
 
@@ -14,19 +15,39 @@ module.exports = function (RED) {
     function PosenetNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
-        var modelPosenet
+        var modelHandpose;
+        var modelPosenet;
 
         setTimeout(function () {
-            posenet.load({
+            node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
+
+            handpose.load().then(function (model) {
+                modelHandpose = model;
+                node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+            }).catch(function (error) {
+                node.error(error);
+                node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
+            });
+
+            /*posenet.load({
                 modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/posenet/model-stride16.json'
             }).then(function (model) {
                 modelPosenet = model;
-                node.status({ fill: "green", shape: "ring", text: "model loaded" });
-            });
+                node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+            }).catch(function (error) {
+                posenet.load().then(function (model2) {
+                    modelPosenet = model2;
+                    node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+                }).catch(function (error2) {
+                    node.error(error);
+                    node.error(error2);
+                    node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
+                });
+            });*/
         }, 1000);
 
         node.on('input', function (msg) {
-            node.status({ fill: "green", shape: "dot", text: "analyzing..." });
+            node.status({ fill: "green", shape: 'dot', text: 'analyzing...' });
             jimp.read(msg.payload).then(function (data) {
                 return data.getBufferAsync(jimp.MIME_PNG);
             }).then(function (buffer) {
@@ -66,6 +87,43 @@ module.exports = function (RED) {
                             }
                         });
                     });*/
+                    modelHandpose.estimateHands(cv).then(function (result) {
+                        msg.details = result;
+                        var handpose = {};
+                        Object.keys(result).forEach(function (key) {
+                            handpose[key] = result[key];
+                        });
+                        msg.payload = handpose;
+                        if (0 < Object.keys(handpose).length) {
+                            msg.payload = handpose;
+                            var cv2 = pureimage.make(image.width, image.height);
+                            var ctx = cv2.getContext('2d');
+                            ctx.drawImage(image, 0, 0);
+                            ctx.strokeStyle = 'rgb(255, 111, 0)';
+                            ctx.lineWidth = 10;
+
+                            try { ctx.drawLine({ start: handpose.nose, end: handpose.leftEye }); } catch (e) {}
+                            try { ctx.drawLine({ start: handpose.leftEye, end: hand.leftEar }); } catch (e) {}
+
+                            var wsb = new streamBuffers.WritableStreamBuffer({ initialSize: 1, incrementAmount: 1 });
+                            pureimage.encodePNGToStream(cv2, wsb).then(function () {
+                                msg.annotatedInput = wsb.getContents();
+                                node.send(msg);
+                                node.status({});
+                            }).catch(function (error) {
+                                node.error(error, msg);
+                                node.status({ fill: 'red', shape: 'ring', text: error });
+                            });
+                        } else {
+                            msg.annotatedInput = msg.payload;
+                            msg.payload = null;
+                            node.send(msg);
+                            node.status({});
+                        }
+                    }, function (error) {
+                        node.error(error, msg);
+                        node.status({ fill: 'red', shape: 'ring', text: 'error' });
+                    });
                     /*mobilenet.load({
                         version: 1,
                         alpha: 1.0,
@@ -83,7 +141,7 @@ module.exports = function (RED) {
                             node.status({});
                         });
                     });*/
-                    modelPosenet.estimateSinglePose(cv).then(function (result) {
+                    /*modelPosenet.estimateSinglePose(cv).then(function (result) {
                         msg.details = result;
                         var pose = {};
                         for (var i = 0; i < result.keypoints.length; i++) {
@@ -95,7 +153,7 @@ module.exports = function (RED) {
                             pose['center'] = { x: (pose.leftShoulder.x + pose.rightShoulder.x)/2,
                                                y: (pose.leftShoulder.y + pose.rightShoulder.y)/2 };
                         }
-                        if (true) {
+                        if (0 < Object.keys(pose).length) {
                             msg.payload = pose;
                             var cv2 = pureimage.make(image.width, image.height);
                             var ctx = cv2.getContext('2d');
@@ -138,7 +196,7 @@ module.exports = function (RED) {
                     }, function (error) {
                         node.error(error, msg);
                         node.status({ fill: 'red', shape: 'ring', text: 'error' });
-                    });
+                    });*/
                 });
             });
         });
