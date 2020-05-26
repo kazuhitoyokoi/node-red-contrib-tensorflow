@@ -33,7 +33,7 @@ var models = [{
                 for (var k = 0; flag && k < 1024; k++) {
                 try {
                     console.log('Downloading: ' + model.name + ', ' + model.urls[j]);
-                    var res = await superagent.get(model.urls[j]).responseType('blob');
+                    var res = await superagent.get(model.urls[j]).responseType('blob').timeout(60000);
                     var file = res.req.path.split('/').slice(-1)[0];
                     fs.writeFileSync(__dirname + '/models/' + model.name + '/' + file, res.body);
                     console.log('Downloaded: ' + model.name + ', ' + model.urls[j]);
