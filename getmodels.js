@@ -30,7 +30,7 @@ var models = [{
         try { fs.mkdirSync(__dirname + '/models/' + model.name); } catch (e) {}
             for (var j = 0; j < model.urls.length; j++) {
                 var flag = true;
-                for (var k = 0; flag && k < 1024; k++) {
+                for (var k = 0; flag && k < 8; k++) {
                 try {
                     console.log('Downloading: ' + model.name + ', ' + model.urls[j]);
                     var res = await superagent.get(model.urls[j]).responseType('blob').timeout(60000);
