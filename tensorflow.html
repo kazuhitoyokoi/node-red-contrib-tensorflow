@@ -1,4 +1,161 @@
 <script type="text/javascript">
+    RED.nodes.registerType('cocossd', {
+        category: 'analysis',
+        color: '#ffa800',
+        defaults: {
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "icon.svg",
+        label: function () {
+            return this.name || "cocossd";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="cocossd">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="node-red:common.label.name"></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="cocossd">
+    <p>The node to dentify objects in image</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result from the processing</dd>
+        <dt>annotatedInput <span class="property-type">buffer</span></dt>
+        <dd>The annotated image data</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and camera node (node-red-contrib-browser-utils) are used to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the image-preview node in node-red-contrib-image-output is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd'>Object Detection (coco-ssd)</a> - GitHub repository of Object Detection (coco-ssd)</li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('handpose', {
+        category: 'analysis',
+        color: '#ffa800',
+        defaults: {
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "icon.svg",
+        label: function () {
+            return this.name || "handpose";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="handpose">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="node-red:common.label.name"></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="handpose">
+    <p>The node to detect fingers in a hand</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result from the processing</dd>
+        <dt>annotatedInput <span class="property-type">buffer</span></dt>
+        <dd>The annotated image data</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and camera node (node-red-contrib-browser-utils) are used to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the image-preview node in node-red-contrib-image-output is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/handpose'>MediaPipe Handpose</a> - GitHub repository of MediaPipe Handpose</li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mobilenet', {
+        category: 'analysis',
+        color: '#ffa800',
+        defaults: {
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "icon.svg",
+        label: function () {
+            return this.name || "mobilenet";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="mobilenet">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> <span data-i18n="node-red:common.label.name"></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="mobilenet">
+    <p>The node to classify images with MobileNet</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result from the processing</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and camera node (node-red-contrib-browser-utils) are used to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the image-preview node in node-red-contrib-image-output is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/mobilenet'>MobileNet</a> - GitHub repository of MobileNet</li>
+    </ul>
+</script>
+
+<script type="text/javascript">
     RED.nodes.registerType('posenet', {
         category: 'analysis',
         color: '#ffa800',
@@ -22,5 +179,31 @@
 </script>
 
 <script type="text/html" data-help-name="posenet">
-    <p>A simple node that converts the message payloads into all lower-case characters</p>
+    <p>The node to estimate human pose</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result from the processing</dd>
+        <dt>annotatedInput <span class="property-type">buffer</span></dt>
+        <dd>The annotated image data</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and camera node (node-red-contrib-browser-utils) are used to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the image-preview node in node-red-contrib-image-output is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/posenet'>PoseNet</a> - GitHub repository of PoseNet</li>
+    </ul>
 </script>
