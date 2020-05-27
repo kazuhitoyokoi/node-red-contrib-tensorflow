@@ -12,10 +12,10 @@ command in your Node-RED user directory, typically `~/.node-red`
     npm install node-red-contrib-tensorflow
 
 ## TensorFlow Models
-### [Object Detection](https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd) -- The node to identify objects in an image
-### [MediaPipe Handpose](https://github.com/tensorflow/tfjs-models/tree/master/handpose) -- The node to detect fingers in a hand
-### [MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet) -- The node to classify images with MobileNet
-### [PoseNet Model](https://github.com/tensorflow/tfjs-models/tree/master/posenet) -- The node to estimate human pose
+- [Object Detection](https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd) -- The node to identify objects in an image
+- [MediaPipe Handpose](https://github.com/tensorflow/tfjs-models/tree/master/handpose) -- The node to detect fingers in a hand
+- [MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet) -- The node to classify images with MobileNet
+- [PoseNet Model](https://github.com/tensorflow/tfjs-models/tree/master/posenet) -- The node to estimate human pose
 
 ## License
 
