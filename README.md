@@ -3,6 +3,10 @@ node-red-contrib-tensorflow
 
 Node-RED nodes for pre-trained TensorFlow models
 
+<img src='sample.png' width='600'>
+
+Example of object detection
+
 ## Install
 
 To install the stable version use the `Menu - Manage palette - Install` 
