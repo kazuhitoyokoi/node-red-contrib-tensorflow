@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "node getmodels.js",
-    "test": "mocha \"test/**/*_spec.js\" --timeout 60000"
+    "test": "mocha \"test/**/*_spec.js\" --timeout 600000"
   },
   "node-red": {
     "nodes": {
