@@ -1,6 +1,6 @@
+var tensorflowNode = require('../tensorflow.js');
 var fs = require('fs');
 var helper = require('node-red-node-test-helper');
-var tensorflowNode = require('../tensorflow.js');
 
 describe('tensorflow nodes', function () {
     afterEach(function () {
@@ -30,7 +30,7 @@ describe('tensorflow nodes', function () {
                 });
                 setTimeout(function () {
                     n1.receive({ payload: fs.readFileSync('./samples/yokoi.jpg') });
-                }, 20000);
+                }, 30000);
             });
         });
     });
@@ -53,6 +53,23 @@ describe('tensorflow nodes', function () {
                 var n1 = helper.getNode('n1');
                 n1.should.have.property('name', 'test name');
                 done();
+            });
+        });
+
+        it('should have result', function (done) {
+            var flow = [{ id: 'n1', type: 'mobilenet', wires: [['n2']] },
+                        { id: 'n2', type: 'helper' }];
+            helper.load(tensorflowNode, flow, function () {
+                var n2 = helper.getNode('n2');
+                var n1 = helper.getNode('n1');
+                n2.on("input", function (msg) {
+                    console.log('msg.payload = ' + msg.payload);
+                    msg.should.have.property('payload', ['suit', 'suit of clothes']);
+                    done();
+                });
+                setTimeout(function () {
+                    n1.receive({ payload: fs.readFileSync('./samples/yokoi.jpg') });
+                }, 30000);
             });
         });
     });
