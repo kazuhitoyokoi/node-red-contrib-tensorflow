@@ -1,0 +1,122 @@
+<script type="text/html" data-help-name="cocossd">
+    <p>The node to identify objects in an image</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result string from the processing</dd>
+        <dt>details <span class="property-type">object</span></dt>
+        <dd>The details of the result returned from TensorFlow.js</dd>
+        <dt>annotatedInput <span class="property-type">buffer</span></dt>
+        <dd>The annotated image data</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and <a href="https://flows.nodered.org/node/node-red-contrib-browser-utils">camera node</a> are useful to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image data in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the <a href="https://flows.nodered.org/node/node-red-contrib-image-output">image-preview node</a> is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd'>Object Detection</a> - GitHub repository of Object Detection (coco-ssd)</li>
+    </ul>
+</script>
+
+<script type="text/html" data-help-name="handpose">
+    <p>The node to detect fingers in a hand</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result string from the processing</dd>
+        <dt>details <span class="property-type">object</span></dt>
+        <dd>The details of the result returned from TensorFlow.js</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and <a href="https://flows.nodered.org/node/node-red-contrib-browser-utils">camera node</a> are useful to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image data in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the <a href="https://flows.nodered.org/node/node-red-contrib-image-output">image-preview node</a> is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/handpose'>MediaPipe Handpose</a> - GitHub repository of MediaPipe Handpose</li>
+    </ul>
+</script>
+
+<script type="text/html" data-help-name="mobilenet">
+    <p>The node to classify images with MobileNet</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result string from the processing</dd>
+        <dt>details <span class="property-type">object</span></dt>
+        <dd>The details of the result returned from TensorFlow.js</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and <a href="https://flows.nodered.org/node/node-red-contrib-browser-utils">camera node</a> are useful to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>To show the annotated image on Node-RED flow editor, the <a href="https://flows.nodered.org/node/node-red-contrib-image-output">image-preview node</a> is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/mobilenet'>MobileNet</a> - GitHub repository of MobileNet</li>
+    </ul>
+</script>
+
+<script type="text/html" data-help-name="posenet">
+    <p>The node to estimate human pose</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd>A buffer of PNG or JPEG data</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The result string from the processing</dd>
+        <dt>details <span class="property-type">object</span></dt>
+        <dd>The details of the result returned from TensorFlow.js</dd>
+        <dt>annotatedInput <span class="property-type">buffer</span></dt>
+        <dd>The annotated image data</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node can handle buffer data of PNG or JPEG data format</p>
+    <p>file-out node, http-request node (buffer output), file-inject node, and <a href="https://flows.nodered.org/node/node-red-contrib-browser-utils">camera node</a> are useful to pass the buffer data to this node.</p> 
+    <p>After processing the image data, this node outputs the result to <code>msg.payload</code>.</p>
+    <p>At the same time, it generates the annotated image data in <code>msg.annotatedInput</code> as a PNG format buffer.</p>
+    <p>To show the annotated image on Node-RED flow editor, the <a href="https://flows.nodered.org/node/node-red-contrib-image-output">image-preview node</a> is useful.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href='https://github.com/tensorflow/tfjs-models/tree/master/posenet'>PoseNet</a> - GitHub repository of PoseNet</li>
+    </ul>
+</script>
