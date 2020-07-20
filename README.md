@@ -22,7 +22,7 @@ command in your Node-RED user directory, typically `~/.node-red`
 - [PoseNet Model](https://github.com/tensorflow/tfjs-models/tree/master/posenet) -- The node to estimate human pose
 
 ## Known issue
-- Conflict with other tensorflow.js modules
+- Conflict with other TensorFlow.js modules
 
   See the details: https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow/issues/3
 
