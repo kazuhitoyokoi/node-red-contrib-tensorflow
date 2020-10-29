@@ -7,3 +7,5 @@ node_js:
   - "14"
   - "12"
   - "10"
+script:
+  - nyc npm test && nyc report --reporter=text-lcov | coveralls
