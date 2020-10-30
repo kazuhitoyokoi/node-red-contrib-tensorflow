@@ -5,7 +5,7 @@ Node-RED nodes for pre-trained TensorFlow models
 
 <img src='https://raw.githubusercontent.com/kazuhitoyokoi/node-red-contrib-tensorflow/master/samples/flow.png' width='600'>
 
-Example of object detection
+Example of object detection ([Demonstration](https://www.katacoda.com/kazuhitoyokoi/scenarios/tensorflow))
 
 ## Install
 
