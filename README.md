@@ -21,6 +21,9 @@ command in your Node-RED user directory, typically `~/.node-red`
 - [MobileNet](https://github.com/tensorflow/tfjs-models/tree/master/mobilenet) -- The node to classify images with MobileNet
 - [PoseNet Model](https://github.com/tensorflow/tfjs-models/tree/master/posenet) -- The node to estimate human pose
 
+## How to use
+https://www.linux.com/news/using-tensorflow-js-and-node-red-with-image-recognition-applications/
+
 ## Known issue
 - Conflict with other TensorFlow.js modules
 
