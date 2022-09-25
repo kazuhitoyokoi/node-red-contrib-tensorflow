@@ -8,7 +8,11 @@
     "test": "mocha \"test/**/*_spec.js\" --timeout 300000",
     "coverage": "nyc npm test"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "node-red": {
+    "version": ">=3.0.0",
     "nodes": {
       "node": "tensorflow.js"
     }
