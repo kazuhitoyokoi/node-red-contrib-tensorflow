@@ -1,12 +1,15 @@
 var jimp = require('jimp');
 var streamBuffers = require('stream-buffers');
 var pureimage = require('pureimage');
+var tf = require('@tensorflow/tfjs-node');
 var cocossd = require('@tensorflow-models/coco-ssd');
 var handpose = require('@tensorflow-models/handpose');
 var mobilenet = require('@tensorflow-models/mobilenet');
 var posenet = require('@tensorflow-models/posenet');
 
 module.exports = function (RED) {
+    tf.setBackend('cpu');
+
     RED.httpAdmin.get("/models/:dir/:name", function (req, res) {
         var options = { root: __dirname + '/models/' + req.params.dir, dotfiles: 'deny' };
         res.sendFile(req.params.name, options);

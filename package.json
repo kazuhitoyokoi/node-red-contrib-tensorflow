@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tensorflow",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "TensorFlow.js nodes using pre-trained models",
   "main": "index.js",
   "scripts": {
@@ -19,25 +19,6 @@
   ],
   "author": "kazuhitoyokoi",
   "license": "Apache-2.0",
-  "dependencies": {
-    "@tensorflow-models/coco-ssd": "2.0.3",
-    "@tensorflow-models/handpose": "^0.0.4",
-    "@tensorflow-models/mobilenet": "^2.0.4",
-    "@tensorflow-models/posenet": "^2.2.1",
-    "@tensorflow/tfjs-core": "^1.7.4",
-    "jimp": "^0.12.1",
-    "pureimage": "^0.2.1",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.5",
-    "stream-buffers": "^3.0.2"
-  },
-  "devDependencies": {
-    "mocha": "^7.2.0",
-    "nyc": "^15.1.0",
-    "coveralls": "^3.1.0",
-    "node-red": "^1.0.6",
-    "node-red-node-test-helper": "^0.2.5"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow.git"
@@ -45,5 +26,22 @@
   "bugs": {
     "url": "https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow/issues"
   },
-  "homepage": "https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow#readme"
+  "homepage": "https://github.com/kazuhitoyokoi/node-red-contrib-tensorflow#readme",
+  "dependencies": {
+    "@tensorflow-models/coco-ssd": "2.2.2",
+    "@tensorflow-models/handpose": "0.0.7",
+    "@tensorflow-models/mobilenet": "2.1.0",
+    "@tensorflow-models/posenet": "2.2.2",
+    "@tensorflow/tfjs-node": "3.20.0",
+    "jimp": "0.16.2",
+    "pureimage": "0.2.1",
+    "request": "2.88.2",
+    "request-promise": "4.2.6",
+    "stream-buffers": "3.0.2"
+  },
+  "devDependencies": {
+    "mocha": "10.0.0",
+    "node-red": "3.0.2",
+    "node-red-node-test-helper": "0.3.0"
+  }
 }
