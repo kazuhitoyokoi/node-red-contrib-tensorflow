@@ -9,7 +9,7 @@
     "coverage": "nyc npm test"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "node-red": {
     "version": ">=3.0.0",

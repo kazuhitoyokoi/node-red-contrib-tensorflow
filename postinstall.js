@@ -51,6 +51,6 @@ var models = [{
 var modelfile = '/proc/device-tree/model';
 if (fs.existsSync(modelfile) && fs.readFileSync(modelfile).toString().startsWith('Raspberry Pi')) {
     var cmd = 'npm rebuild @tensorflow/tfjs-node --build-from-source';
-    var spawn = child_process.spawnSync(cmd, { shell: true });
+    var spawn = child_process.spawnSync(cmd, { cwd: __dirname, shell: true });
     console.log(spawn.stderr.toString() + '\n----\n' + spawn.stdout.toString());
 }
