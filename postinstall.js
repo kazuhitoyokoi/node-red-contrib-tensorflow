@@ -1,5 +1,7 @@
 var fs = require('fs');
 var rp = require('request-promise');
+var child_process = require('child_process');
+
 var models = [{
     name: 'mobilenet',
     urls: ['https://storage.googleapis.com/tfhub-tfjs-modules/google/imagenet/mobilenet_v1_100_224/classification/1/model.json',
@@ -45,3 +47,10 @@ var models = [{
         }
     }
 })();
+
+var modelfile = '/proc/device-tree/model';
+if (fs.existsSync(modelfile) && fs.readFileSync(modelfile).toString().startsWith('Raspberry Pi')) {
+    var cmd = 'npm rebuild @tensorflow/tfjs-node --build-from-source';
+    var spawn = child_process.spawnSync(cmd, { shell: true });
+    console.log(spawn.stderr.toString() + '\n----\n' + spawn.stdout.toString());
+}

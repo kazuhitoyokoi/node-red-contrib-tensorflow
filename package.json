@@ -4,7 +4,7 @@
   "description": "TensorFlow.js nodes using pre-trained models",
   "main": "index.js",
   "scripts": {
-    "postinstall": "node getmodels.js",
+    "postinstall": "node postinstall.js",
     "test": "mocha \"test/**/*_spec.js\" --timeout 300000",
     "coverage": "nyc npm test"
   },
@@ -36,15 +36,15 @@
     "@tensorflow-models/handpose": "0.0.7",
     "@tensorflow-models/mobilenet": "2.1.0",
     "@tensorflow-models/posenet": "2.2.2",
-    "@tensorflow/tfjs-node": "3.20.0",
+    "@tensorflow/tfjs-node": "4.1.0",
     "jimp": "0.16.2",
-    "pureimage": "0.2.1",
+    "pureimage": "0.3.14",
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "stream-buffers": "3.0.2"
   },
   "devDependencies": {
-    "mocha": "10.0.0",
+    "mocha": "10.2.0",
     "node-red": "3.0.2",
     "node-red-node-test-helper": "0.3.0"
   }
