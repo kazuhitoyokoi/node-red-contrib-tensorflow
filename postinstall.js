@@ -1,6 +1,7 @@
+var path = require('path');
 var fs = require('fs');
-var rp = require('request-promise');
 var child_process = require('child_process');
+var rp = require('request-promise');
 
 var models = [{
     name: 'mobilenet',
@@ -51,6 +52,6 @@ var models = [{
 var modelfile = '/proc/device-tree/model';
 if (fs.existsSync(modelfile) && fs.readFileSync(modelfile).toString().startsWith('Raspberry Pi')) {
     var cmd = 'npm rebuild @tensorflow/tfjs-node --build-from-source';
-    var spawn = child_process.spawnSync(cmd, { cwd: __dirname, shell: true });
+    var spawn = child_process.spawnSync(cmd, { cwd: path.resolve(__dirname, '..', '..'), shell: true });
     console.log(spawn.stderr.toString() + '\n----\n' + spawn.stdout.toString());
 }

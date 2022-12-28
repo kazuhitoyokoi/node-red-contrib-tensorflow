@@ -9,7 +9,7 @@
     "coverage": "nyc npm test"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   },
   "node-red": {
     "version": ">=3.0.0",
@@ -38,7 +38,7 @@
     "@tensorflow-models/posenet": "2.2.2",
     "@tensorflow/tfjs-node": "4.1.0",
     "jimp": "0.16.2",
-    "pureimage": "0.3.14",
+    "pureimage": "0.2.1",
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "stream-buffers": "3.0.2"
