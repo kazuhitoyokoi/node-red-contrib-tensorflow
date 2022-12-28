@@ -1,0 +1,457 @@
+[
+    {
+        "id": "1899229c3cb17e3b",
+        "type": "cocossd",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "x": 140,
+        "y": 420,
+        "wires": [
+            [
+                "22409a0694cfe84f",
+                "42c42a4bfcd7694b"
+            ]
+        ]
+    },
+    {
+        "id": "1728a1ee6946cc72",
+        "type": "posenet",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "x": 140,
+        "y": 640,
+        "wires": [
+            [
+                "8459ccb4fddf804c",
+                "2d136cd00a5a69bf"
+            ]
+        ]
+    },
+    {
+        "id": "8459ccb4fddf804c",
+        "type": "image",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "width": 160,
+        "data": "annotatedInput",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 380,
+        "y": 640,
+        "wires": [
+            [
+                "1ee2b229a9c39eb7"
+            ]
+        ]
+    },
+    {
+        "id": "22409a0694cfe84f",
+        "type": "image",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "width": 160,
+        "data": "annotatedInput",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 380,
+        "y": 420,
+        "wires": [
+            [
+                "35c3466d388d4f95"
+            ]
+        ]
+    },
+    {
+        "id": "30536dbce1855454",
+        "type": "http request",
+        "z": "ce6f81f482665217",
+        "name": "get person image",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "https://raw.githubusercontent.com/kazuhitoyokoi/node-red-contrib-tensorflow/main/samples/yokoi.jpg",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "a0e8f16c06baf803"
+            ]
+        ]
+    },
+    {
+        "id": "ca2cf6a2ca223d47",
+        "type": "image",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 620,
+        "y": 200,
+        "wires": [
+            [
+                "1899229c3cb17e3b"
+            ]
+        ]
+    },
+    {
+        "id": "f70c4cfecae94dd4",
+        "type": "handpose",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "x": 140,
+        "y": 1040,
+        "wires": [
+            [
+                "b116717891b0c559",
+                "24caf1574254b6ae"
+            ]
+        ]
+    },
+    {
+        "id": "1fdbd18d7446813c",
+        "type": "mobilenet",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "x": 140,
+        "y": 1220,
+        "wires": [
+            [
+                "82bd91adfdddf1fd"
+            ]
+        ]
+    },
+    {
+        "id": "2d136cd00a5a69bf",
+        "type": "debug",
+        "z": "ce6f81f482665217",
+        "name": "result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 210,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "82bd91adfdddf1fd",
+        "type": "debug",
+        "z": "ce6f81f482665217",
+        "name": "result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 290,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "1ee2b229a9c39eb7",
+        "type": "http request",
+        "z": "ce6f81f482665217",
+        "name": "get hand image",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/93/Wijsvinger.jpg",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 160,
+        "y": 860,
+        "wires": [
+            [
+                "9a1d126f633b380a"
+            ]
+        ]
+    },
+    {
+        "id": "b116717891b0c559",
+        "type": "image",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "width": 160,
+        "data": "annotatedInput",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 380,
+        "y": 1040,
+        "wires": [
+            [
+                "9c1147eade443f6f"
+            ]
+        ]
+    },
+    {
+        "id": "c8a30cb66cd51f0b",
+        "type": "image",
+        "z": "ce6f81f482665217",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 600,
+        "y": 860,
+        "wires": [
+            [
+                "f70c4cfecae94dd4"
+            ]
+        ]
+    },
+    {
+        "id": "3c6d6d8d771aee0c",
+        "type": "status",
+        "z": "ce6f81f482665217",
+        "name": "get cocossd status",
+        "scope": [
+            "1899229c3cb17e3b"
+        ],
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "c30776cb9b7e5ab6"
+            ]
+        ]
+    },
+    {
+        "id": "c30776cb9b7e5ab6",
+        "type": "switch",
+        "z": "ce6f81f482665217",
+        "name": "model is loaded?",
+        "property": "status.text",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "model loaded",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 350,
+        "y": 120,
+        "wires": [
+            [
+                "e59e34991eb806d4"
+            ]
+        ]
+    },
+    {
+        "id": "a0e8f16c06baf803",
+        "type": "change",
+        "z": "ce6f81f482665217",
+        "name": "backup original image",
+        "rules": [
+            {
+                "t": "set",
+                "p": "input",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "ca2cf6a2ca223d47"
+            ]
+        ]
+    },
+    {
+        "id": "9a1d126f633b380a",
+        "type": "change",
+        "z": "ce6f81f482665217",
+        "name": "backup original image",
+        "rules": [
+            {
+                "t": "set",
+                "p": "input",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 860,
+        "wires": [
+            [
+                "c8a30cb66cd51f0b"
+            ]
+        ]
+    },
+    {
+        "id": "35c3466d388d4f95",
+        "type": "change",
+        "z": "ce6f81f482665217",
+        "name": "recover original image",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "input",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 420,
+        "wires": [
+            [
+                "1728a1ee6946cc72"
+            ]
+        ]
+    },
+    {
+        "id": "9c1147eade443f6f",
+        "type": "change",
+        "z": "ce6f81f482665217",
+        "name": "recover original image",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "input",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 1040,
+        "wires": [
+            [
+                "1fdbd18d7446813c"
+            ]
+        ]
+    },
+    {
+        "id": "42c42a4bfcd7694b",
+        "type": "debug",
+        "z": "ce6f81f482665217",
+        "name": "result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 210,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "24caf1574254b6ae",
+        "type": "debug",
+        "z": "ce6f81f482665217",
+        "name": "result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 210,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "e59e34991eb806d4",
+        "type": "delay",
+        "z": "ce6f81f482665217",
+        "name": "wait for loading other models",
+        "pauseType": "delay",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 600,
+        "y": 120,
+        "wires": [
+            [
+                "30536dbce1855454"
+            ]
+        ]
+    },
+    {
+        "id": "89b5218177b2a48c",
+        "type": "comment",
+        "z": "ce6f81f482665217",
+        "name": "Install `node-red-contrib-image-output` module before trying this flow",
+        "info": "",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    }
+]
