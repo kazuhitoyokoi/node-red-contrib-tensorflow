@@ -82,6 +82,9 @@ module.exports = function (RED) {
                         });
                     }
                 });
+            }).catch(function (error) {
+                node.error(error, msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
         });
     }
@@ -166,6 +169,9 @@ module.exports = function (RED) {
                         });
                     }
                 });
+            }).catch(function (error) {
+                node.error(error, msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
         });
     }
@@ -225,6 +231,9 @@ module.exports = function (RED) {
                         });
                     }
                 });
+            }).catch(function (error) {
+                node.error(error, msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
         });
     }
@@ -325,6 +334,9 @@ module.exports = function (RED) {
                         });
                     }
                 });
+            }).catch(function (error) {
+                node.error(error, msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
         });
     }
