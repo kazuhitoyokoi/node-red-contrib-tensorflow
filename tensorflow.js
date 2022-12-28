@@ -80,6 +80,8 @@ module.exports = function (RED) {
                             node.error(error, msg);
                             node.status({ fill: 'red', shape: 'ring', text: 'error' });
                         });
+                    } else {
+                        node.status({ fill: 'red', shape: 'ring', text: 'model is not loaded' });
                     }
                 });
             }).catch(function (error) {
@@ -167,6 +169,8 @@ module.exports = function (RED) {
                             node.error(error, msg);
                             node.status({ fill: 'red', shape: 'ring', text: 'error' });
                         });
+                    } else {
+                        node.status({ fill: 'red', shape: 'ring', text: 'model is not loaded' });
                     }
                 });
             }).catch(function (error) {
@@ -229,6 +233,8 @@ module.exports = function (RED) {
                             node.error(error, msg);
                             node.status({ fill: 'red', shape: 'ring', text: 'error' });
                         });
+                    } else {
+                        node.status({ fill: 'red', shape: 'ring', text: 'model is not loaded' });
                     }
                 });
             }).catch(function (error) {
@@ -332,6 +338,8 @@ module.exports = function (RED) {
                             node.error(error, msg);
                             node.status({ fill: 'red', shape: 'ring', text: 'error' });
                         });
+                    } else {
+                        node.status({ fill: 'red', shape: 'ring', text: 'model is not loaded' });
                     }
                 });
             }).catch(function (error) {
