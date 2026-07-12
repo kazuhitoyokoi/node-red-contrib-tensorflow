@@ -2,6 +2,7 @@ name: Release Node-RED node
 on:
   release:
     types: [created]
+  workflow_dispatch:
 jobs:
   release:
     runs-on: ubuntu-latest
