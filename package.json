@@ -1,10 +1,9 @@
 {
   "name": "node-red-contrib-tensorflow",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "TensorFlow.js nodes using pre-trained models",
-  "main": "index.js",
+  "main": "tensorflow.js",
   "scripts": {
-    "postinstall": "node postinstall.js",
     "test": "mocha \"test/**/*_spec.js\" --timeout 300000",
     "coverage": "nyc npm test"
   },
@@ -36,16 +35,15 @@
     "@tensorflow-models/handpose": "0.0.7",
     "@tensorflow-models/mobilenet": "2.1.0",
     "@tensorflow-models/posenet": "2.2.2",
-    "@tensorflow/tfjs-node": "4.1.0",
-    "jimp": "0.16.2",
-    "pureimage": "0.2.1",
-    "request": "2.88.2",
-    "request-promise": "4.2.6",
-    "stream-buffers": "3.0.2"
+    "@tensorflow/tfjs-backend-cpu": "3.21.0",
+    "@tensorflow/tfjs-core": "3.21.0",
+    "jimp": "0.22.12",
+    "pureimage": "0.3.2",
+    "stream-buffers": "3.0.3"
   },
   "devDependencies": {
-    "mocha": "10.2.0",
-    "node-red": "3.0.2",
-    "node-red-node-test-helper": "0.3.0"
+    "mocha": "11.7.6",
+    "node-red": "5.0.1",
+    "node-red-node-test-helper": "0.3.6"
   }
 }

@@ -1,18 +1,122 @@
+var fs = require('fs');
+var https = require('https');
 var jimp = require('jimp');
 var streamBuffers = require('stream-buffers');
 var pureimage = require('pureimage');
-var tf = require('@tensorflow/tfjs-node');
+var tf = require('@tensorflow/tfjs-core');
+require('@tensorflow/tfjs-backend-cpu');
 var cocossd = require('@tensorflow-models/coco-ssd');
 var handpose = require('@tensorflow-models/handpose');
 var mobilenet = require('@tensorflow-models/mobilenet');
 var posenet = require('@tensorflow-models/posenet');
 
+var models = [{
+    name: 'mobilenet',
+    baseUrl: 'https://tfhub.dev/google/imagenet/mobilenet_v1_100_224/classification/1/',
+    modelJson: 'model.json',
+    query: '?tfjs-format=file'
+}, {
+    name: 'coco-ssd',
+    baseUrl: 'https://storage.googleapis.com/tfjs-models/savedmodel/ssdlite_mobilenet_v2/',
+    modelJson: 'model.json',
+    query: ''
+}, {
+    name: 'posenet',
+    baseUrl: 'https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/float/075/',
+    modelJson: 'model-stride16.json',
+    query: ''
+}];
+
+var downloadStarted = false;
+var modelReady = {};
+
 module.exports = function (RED) {
     tf.setBackend('cpu');
 
+    function fetch(url, depth) {
+        return new Promise(function (resolve, reject) {
+            if (depth > 5) {
+                reject(new Error('too many redirects, ' + url));
+                return;
+            }
+            var request = https.get(url, { headers: { 'User-Agent': 'node-red-contrib-tensorflow' } }, function (response) {
+                var location = response.headers.location;
+                if (response.statusCode >= 300 && response.statusCode < 400 && location) {
+                    response.resume();
+                    resolve(fetch(location, depth + 1));
+                    return;
+                }
+                if (response.statusCode !== 200) {
+                    response.resume();
+                    reject(new Error('status code ' + response.statusCode + ', ' + url));
+                    return;
+                }
+                var chunks = [];
+                response.on('data', function (chunk) { chunks.push(chunk); });
+                response.on('end', function () { resolve(Buffer.concat(chunks)); });
+                response.on('error', reject);
+            });
+            request.on('error', reject);
+            request.setTimeout(30000, function () {
+                request.destroy(new Error('socket timeout, ' + url));
+            });
+        });
+    }
+
+    async function fetchWithRetry(url) {
+        for (var k = 0; k < 8; k++) {
+            try {
+                return await fetch(url, 0);
+            } catch (error) {
+                if (k === 7) {
+                    throw error;
+                }
+            }
+        }
+    }
+
+    if (!downloadStarted) {
+        downloadStarted = true;
+        try { fs.mkdirSync(__dirname + '/models'); } catch (e) {}
+        models.forEach(function (model) {
+            modelReady[model.name] = (async function () {
+                var dir = __dirname + '/models/' + model.name;
+                var modelJsonFile = dir + '/' + model.modelJson;
+                if (fs.existsSync(modelJsonFile)) {
+                    return;
+                }
+                try { fs.mkdirSync(dir); } catch (e) {}
+                var manifest = await fetchWithRetry(model.baseUrl + model.modelJson + model.query);
+                var paths = [];
+                JSON.parse(manifest.toString()).weightsManifest.forEach(function (group) {
+                    (group.paths || []).forEach(function (path) { paths.push(path); });
+                });
+                for (var j = 0; j < paths.length; j++) {
+                    var weightFile = dir + '/' + paths[j];
+                    var weightBuffer = await fetchWithRetry(model.baseUrl + paths[j] + model.query);
+                    fs.writeFileSync(weightFile + '.tmp', weightBuffer);
+                    fs.renameSync(weightFile + '.tmp', weightFile);
+                }
+                fs.writeFileSync(modelJsonFile + '.tmp', manifest);
+                fs.renameSync(modelJsonFile + '.tmp', modelJsonFile);
+            })().then(function () {
+                return true;
+            }).catch(function (error) {
+                RED.log.warn('failed to download ' + model.name + ' model: ' + error);
+                return false;
+            });
+        });
+    }
+
     RED.httpAdmin.get("/models/:dir/:name", function (req, res) {
-        var options = { root: __dirname + '/models/' + req.params.dir, dotfiles: 'deny' };
-        res.sendFile(req.params.name, options);
+        Promise.resolve(modelReady[req.params.dir]).then(function (ready) {
+            if (ready === false) {
+                res.sendStatus(404);
+                return;
+            }
+            var options = { root: __dirname + '/models/' + req.params.dir, dotfiles: 'deny' };
+            res.sendFile(req.params.name, options);
+        });
     });
 
     function CocossdNode(config) {
@@ -20,26 +124,25 @@ module.exports = function (RED) {
         var node = this;
         var modelCocossd;
 
-        setTimeout(function () {
-            node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
-            cocossd.load({
-                modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/coco-ssd/model.json'
-            }).then(function (model) {
-                modelCocossd = model;
+        node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
+        var modelPromise = cocossd.load({
+            modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/coco-ssd/model.json'
+        }).then(function (model) {
+            modelCocossd = model;
+            node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+        }).catch(function (error) {
+            return cocossd.load().then(function (model2) {
+                modelCocossd = model2;
                 node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-            }).catch(function (error) {
-                cocossd.load().then(function (model2) {
-                    modelCocossd = model2;
-                    node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-                }).catch(function (error2) {
-                    node.error(error);
-                    node.error(error2);
-                    node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
-                });
+            }).catch(function (error2) {
+                node.error(error);
+                node.error(error2);
+                node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
             });
-        }, 1000);
+        });
 
         node.on('input', function (msg) {
+            modelPromise.then(function () {
             node.status({ fill: "green", shape: 'dot', text: 'analyzing...' });
             jimp.read(msg.payload).then(function (data) {
                 return data.getBufferAsync(jimp.MIME_PNG);
@@ -88,6 +191,7 @@ module.exports = function (RED) {
                 node.error(error, msg);
                 node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
+            });
         });
     }
 
@@ -98,18 +202,17 @@ module.exports = function (RED) {
         var node = this;
         var modelHandpose;
 
-        setTimeout(function () {
-            node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
-            handpose.load().then(function (model) {
-                modelHandpose = model;
-                node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-            }).catch(function (error) {
-                node.error(error);
-                node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
-            });
-        }, 1000);
+        node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
+        var modelPromise = handpose.load().then(function (model) {
+            modelHandpose = model;
+            node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+        }).catch(function (error) {
+            node.error(error);
+            node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
+        });
 
         node.on('input', function (msg) {
+            modelPromise.then(function () {
             node.status({ fill: "green", shape: 'dot', text: 'analyzing...' });
             jimp.read(msg.payload).then(function (data) {
                 return data.getBufferAsync(jimp.MIME_PNG);
@@ -177,6 +280,7 @@ module.exports = function (RED) {
                 node.error(error, msg);
                 node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
+            });
         });
     }
 
@@ -187,29 +291,28 @@ module.exports = function (RED) {
         var node = this;
         var modelMobilenet;
 
-        setTimeout(function () {
-            node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
-            mobilenet.load({
-                version: 1,
-                alpha: 1.0,
-                modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/mobilenet/model.json',
-                inputRange: [0, 1]
-            }).then(function (model) {
-                modelMobilenet = model;
+        node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
+        var modelPromise = mobilenet.load({
+            version: 1,
+            alpha: 1.0,
+            modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/mobilenet/model.json',
+            inputRange: [0, 1]
+        }).then(function (model) {
+            modelMobilenet = model;
+            node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+        }).catch(function (error) {
+            return mobilenet.load().then(function (model2) {
+                modelMobilenet = model2;
                 node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-            }).catch(function (error) {
-                mobilenet.load().then(function (model2) {
-                    modelMobilenet = model2;
-                    node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-                }).catch(function (error2) {
-                    node.error(error);
-                    node.error(error2);
-                    node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
-                });
+            }).catch(function (error2) {
+                node.error(error);
+                node.error(error2);
+                node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
             });
-        }, 1000);
+        });
 
         node.on('input', function (msg) {
+            modelPromise.then(function () {
             node.status({ fill: "green", shape: 'dot', text: 'analyzing...' });
             jimp.read(msg.payload).then(function (data) {
                 return data.getBufferAsync(jimp.MIME_PNG);
@@ -241,6 +344,7 @@ module.exports = function (RED) {
                 node.error(error, msg);
                 node.status({ fill: 'red', shape: 'ring', text: 'error' });
             });
+            });
         });
     }
 
@@ -251,27 +355,25 @@ module.exports = function (RED) {
         var node = this;
         var modelPosenet;
 
-        setTimeout(function () {
-            node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
-
-            posenet.load({
-                modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/posenet/model-stride16.json'
-            }).then(function (model) {
-                modelPosenet = model;
+        node.status({ fill: "green", shape: 'ring', text: 'loading model...' });
+        var modelPromise = posenet.load({
+            modelUrl: 'http://localhost:' + RED.settings.uiPort + '/models/posenet/model-stride16.json'
+        }).then(function (model) {
+            modelPosenet = model;
+            node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
+        }).catch(function (error) {
+            return posenet.load().then(function (model2) {
+                modelPosenet = model2;
                 node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-            }).catch(function (error) {
-                posenet.load().then(function (model2) {
-                    modelPosenet = model2;
-                    node.status({ fill: "green", shape: 'ring', text: 'model loaded' });
-                }).catch(function (error2) {
-                    node.error(error);
-                    node.error(error2);
-                    node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
-                });
+            }).catch(function (error2) {
+                node.error(error);
+                node.error(error2);
+                node.status({ fill: 'red', shape: 'ring', text: 'fail to load model' });
             });
-        }, 1000);
+        });
 
         node.on('input', function (msg) {
+            modelPromise.then(function () {
             node.status({ fill: "green", shape: 'dot', text: 'analyzing...' });
             jimp.read(msg.payload).then(function (data) {
                 return data.getBufferAsync(jimp.MIME_PNG);
@@ -345,6 +447,7 @@ module.exports = function (RED) {
             }).catch(function (error) {
                 node.error(error, msg);
                 node.status({ fill: 'red', shape: 'ring', text: 'error' });
+            });
             });
         });
     }
